@@ -11,29 +11,18 @@
   <body>
     <script language="javascript" type="text/javascript">
 
-  module( "Pepper Tests");
+  module( "Event Tests");
     
-  test( "String helper toCamelCase()", function(){
-    equals( "camel case".toCamelCase(), "CamelCase" );
-    equals( "camEl_ Case ".toCamelCase(), "CamElCase" );
-    equals( "camel1case".toCamelCase(), "Camel1case" );
+  test( "Watch for an event, then trigger one and see if we catch it bubbling up.", function(){
+    domElement = document.getElementById( 'main' );
+    domElement.addEventListener( 'click', function() {
+       this.setAttribute( 'message', "This is the event that you are looking for." );
+    }, false );
+    commander = new Event( 'click' );
+    commander.trigger( domElement );
+    equals( domElement.getAttribute( 'message' ), "This is the event that you are looking for." );
   });
-  
-  test( "Psuedo-classes should be properly adding instance variables, not class variables", function(){
-    dummySassij1 = new DummyPepperClass();
-    dummySassij1.setDummyAttr( 'test1' );
-    dummySassij2 = new DummyPepperClass();
-    dummySassij2.setDummyAttr( 'test2' );
-    equals( dummySassij1.getDummyAttr(), 'test1' );
-    equals( dummySassij2.getDummyAttr(), 'test2' );
-  });
-  
-  test( "Array should have the hasElement() function", function(){
-    array = [ 'A', 'B', 'C', 'D', 'E' ];
-    equals( array.hasElement( 'A' ), true );
-    equals( array.hasElement( 'F' ), false );
-  });
-  
+    
     </script>
 
     <h1></h1>

@@ -1,6 +1,8 @@
 libraries = function(){
   return [
     'pepper',
+    'event',
+    'drawing'
   ];
 };
 

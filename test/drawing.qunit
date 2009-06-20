@@ -11,27 +11,16 @@
   <body>
     <script language="javascript" type="text/javascript">
 
-  module( "Pepper Tests");
+  module( "Draw Tests");
     
-  test( "String helper toCamelCase()", function(){
-    equals( "camel case".toCamelCase(), "CamelCase" );
-    equals( "camEl_ Case ".toCamelCase(), "CamElCase" );
-    equals( "camel1case".toCamelCase(), "Camel1case" );
-  });
-  
-  test( "Psuedo-classes should be properly adding instance variables, not class variables", function(){
-    dummySassij1 = new DummyPepperClass();
-    dummySassij1.setDummyAttr( 'test1' );
-    dummySassij2 = new DummyPepperClass();
-    dummySassij2.setDummyAttr( 'test2' );
-    equals( dummySassij1.getDummyAttr(), 'test1' );
-    equals( dummySassij2.getDummyAttr(), 'test2' );
-  });
-  
-  test( "Array should have the hasElement() function", function(){
-    array = [ 'A', 'B', 'C', 'D', 'E' ];
-    equals( array.hasElement( 'A' ), true );
-    equals( array.hasElement( 'F' ), false );
+  test( "On mousedown, Draw should have a bunch of 'attributes' set.", function(){
+    canvas = new Drawing();
+    commander = new Event( 'mousedown' );
+    commander.trigger( canvas );
+    
+    // Since we aren't moving the mouse yet, the canvas will asume an initial
+    // coordinate of [ 0, 0 ].
+    equals( canvas.points[0], [ 0, 0 ] );
   });
   
     </script>
