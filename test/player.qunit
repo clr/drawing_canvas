@@ -18,19 +18,9 @@
     drawing = new Drawing( canvas.canvas );
   }
 
-  mouseDown = function(){
-    commander = new Event( 'mousedown' );
-    commander.trigger( drawing.getCanvas() );
-  }
-  
-  mouseUp = function(){
-    commander = new Event( 'mouseup' );
-    commander.trigger( drawing.getCanvas() );
-  }
-  
-  module( "Draw Tests");
+  module( "Player Tests");
     
-  test( "Should have getters and setters.", function(){
+  test( "Should accept JSON from a previous Drawing.", function(){
     beforeEach();
     drawing.pencilDown();
     equals( true, drawing.isPencilOnCanvas() );

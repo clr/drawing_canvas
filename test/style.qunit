@@ -10,16 +10,37 @@
   </head>
   <body>
     <script language="javascript" type="text/javascript">
-
-
+  
+  module( "Style Tests");
+    
+  test( "Should get style attributes from pickers.", function(){
+    style = new Style();
+    equals( style.getColor(), '#FF0000' );
+    equals( style.getOpacity(), 0.6 );
+    equals( style.getSize(), 2 );
+    same( style.getStyle(), { color: '#FF0000', opacity: 0.6, size: 2 } );
+  });
+  
     </script>
+
     <h1></h1>
     <h2 id="banner"></h2>
-    <script language="javascript" type="text/javascript">
-    </script>
     <ol id="tests"></ol>
     <div id="results"></div>
-    <div id="main"></div>        
+    <div id="main">
+      <div id="style_controls" style="display:none">
+        <input id="color_picker" color="#FF0000" />
+        <input id="size_picker" value="2" />
+        <input id="opacity_picker" value="60" />
+      </div>
+      <canvas id="drawing_canvas" style="display:none"></canvas>
+    </div>
+
+    <script language="javascript" type="text/javascript">
+  // Stupid XUL colorpicker element returns 'color' instead of 'value'.  We
+  // mimick that here.
+  Element.prototype.color = "#FF0000";
+    </script>
 
   </body>
 </html>

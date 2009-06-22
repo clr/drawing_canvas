@@ -1,0 +1,30 @@
+* The choice of JSON: it is lightweight and easy to manipulate.  I almost 
+started encoding the data as objects (Line, Points, Style, etc.), with a 
+plan to descend through an object tree and convert it to JSON or whatever
+on save, but I could just as easily descend through JSON, and I can't 
+forsee getting any advantage from dealing with extendable objects instead 
+of a simple data graph.  So simple JSON it is.
+
+* One problem with this [canvas] approach is that we have an extremely simple algorithm 
+for drawing the lines based on mouse movement.  A more sophisticated approach 
+would replace the simple line draw with one that took mouse velocity 
+(possibly momentum even?) into account and antialias the brush stroke 
+accordingly before rendering it to the canvas.
+
+* Where is SketchFu's 'opacity' setting?  Can't find it for the life of me.
+
+* I am using DOM ids as though there will only be one drawing canvas per document
+(or window in the case of XUL).  If I had more time and a reason, I would 
+structure the elements such that I could retrieve the same attributes via 
+position (conventions-based approach) so that all drawing canvases contianed 
+all of their attributes within their own scope.  Could also scope the canvas 
+within a jQuery assignment, and then generate the controls onload without using 
+DOM traversal.  Hmm.  Maybe I'll do that in v2.0.
+
+* Implemented 'opacity', and ran into an unexpected issue.  Because a line is
+drawn on each mousemove, the opacities build up, essentially smearing the
+line from opaque to the desired opacity.  I think the best way around this
+will be to always draw the current line into another 'layer', and then 
+compress that layer on mouseup.  Then, the line can draw as opaque, and we
+can control the opacity of the entire layer.
+

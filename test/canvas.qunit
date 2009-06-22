@@ -11,15 +11,24 @@
   <body>
     <script language="javascript" type="text/javascript">
 
-
+  module( "Canvas Tests");
+    
+  test( "Check to see that the canvas exists and has the right dimensions.", function(){
+    canvas = new Canvas();
+    canvas.initialize();
+    equals( canvas.width, canvas.canvas.getAttribute( 'width' ) );
+    equals( canvas.height, canvas.canvas.getAttribute( 'height' ) );
+  });
+    
     </script>
+
     <h1></h1>
     <h2 id="banner"></h2>
-    <script language="javascript" type="text/javascript">
-    </script>
     <ol id="tests"></ol>
     <div id="results"></div>
-    <div id="main"></div>        
+    <div id="main">
+      <canvas id="drawing_canvas"></canvas>
+    </div>
 
   </body>
 </html>

@@ -11,10 +11,15 @@
 
   <toolbar>
     <menubar flex="1">
-      <colorpicker type="button" />
-      <menu label="Style">
+      <colorpicker id="color_picker" type="button"/>
+      <menu label="Size">
         <menupopup>
-          <menuitem label="2px" oncommand="loadTest();"/>
+          <scale id="size_picker" min="0" max="100" orient="vertical" dir="reverse" />
+        </menupopup>
+      </menu>
+      <menu label="Opacity">
+        <menupopup>
+          <scale id="opacity_picker" min="0" max="100" orient="vertical" dir="reverse" />
         </menupopup>
       </menu>
     </menubar>
