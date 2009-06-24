@@ -29,7 +29,7 @@
 
 window.onload = function(){ 
   canvas = new Canvas();
-  canvas.initialize();
+  canvas.cleanSlate();
 };
 
 ]]>
