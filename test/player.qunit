@@ -30,7 +30,7 @@
     // This is really difficult to test, since everything happens within the canvas pixel array.
     // We will forgo color sampling to see if the image comes out right, and settle for
     // a visual inspection.
-    equals( player.play(), true );
+    ok( ( player.timeout != null ) );
   });
   
     </script>
@@ -46,7 +46,7 @@
         <input id="opacity_picker" value="60" />
       </div>
       <canvas id="drawing_canvas"></canvas>
-      <input id="speed_picker" value="0" />
+      <input id="speed_picker" value="0" style="display:none" />
     </div>
 
     <script language="javascript" type="text/javascript">
