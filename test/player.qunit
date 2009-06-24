@@ -25,12 +25,13 @@
     
   test( "should be able to load JSON from previous Drawing '../doc/foggy_winter_day.sample.json'", function(){
     beforeEach();
-    player = new Player( '../doc/foggy_winter_day.json', false );
-    same( player.getData(), testJson() );
+    player = new Player( '../doc/foggy_winter_day.sample.json', false );
+    same( testJson(), player.getData() );
     // This is really difficult to test, since everything happens within the canvas pixel array.
     // We will forgo color sampling to see if the image comes out right, and settle for
     // a visual inspection.
-    ok( ( player.timeout != null ) );
+    player.play();
+    ok( ( player.timeout != null ), "timeout should be firing" );
   });
   
     </script>
