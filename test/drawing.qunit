@@ -64,7 +64,7 @@
   test( "On mousedown, Draw's 'currentLine' should have it's style set.", function(){
     beforeEach();
     mouseDown();
-    same( drawing.data.l[0].s, { color: '#FF0000', opacity: 0.6, size: 2 } );
+    same( drawing.data.l[0].s, { c: '#FF0000', o: 0.6, s: 2 } );
   });
   
   test( "On mouseup, Draw should pull up on the pencil.", function(){

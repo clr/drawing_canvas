@@ -12,19 +12,26 @@ would replace the simple line draw with one that took mouse velocity
 accordingly before rendering it to the canvas.
 
 * Where is SketchFu's 'opacity' setting?  Can't find it for the life of me.
+Are they relying entirely on the tablet pressure?  This can be accessed via 
+Flash, but it isn't possible to access that is a pure-JS solution.
 
 * I am using DOM ids as though there will only be one drawing canvas per document
-(or window in the case of XUL).  If I had more time and a reason, I would 
-structure the elements such that I could retrieve the same attributes via 
-position (conventions-based approach) so that all drawing canvases contianed 
-all of their attributes within their own scope.  Could also scope the canvas 
-within a jQuery assignment, and then generate the controls onload without using 
-DOM traversal.  Hmm.  Maybe I'll do that in v2.0.
+(or window in the case of XUL).  This is not a  production-ready code practice.  
+In the next version, I will generate the widgets onload and assign them to the 
+window object dynamically, and pass the window object to each widget so that the
+widgets can identify each other through a mutual DOM-anonymous context.
 
 * Implemented 'opacity', and ran into an unexpected issue.  Because a line is
 drawn on each mousemove, the opacities build up, essentially smearing the
 line from opaque to the desired opacity.  I think the best way around this
 will be to always draw the current line into another 'layer', and then 
 compress that layer on mouseup.  Then, the line can draw as opaque, and we
-can control the opacity of the entire layer.
+can control the opacity of the entire layer.  This algorithm will take some extra 
+doing, but the new line creation is pretty easy to identify in Drawing and Player.
+
+* Need to watch for 'mouseout' events which should probably terminate the line,
+but leave the pencil down so we can restart a new line at 'mouseenter'.  Maybe 
+also bind 'mouseup' to the entire window, so we can simulate drawing outside of
+the canvas, for usability purposes.
+
 
