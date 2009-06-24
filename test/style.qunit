@@ -18,7 +18,7 @@
     equals( style.getColor(), '#FF0000' );
     equals( style.getOpacity(), 0.6 );
     equals( style.getSize(), 2 );
-    same( style.getStyle(), { color: '#FF0000', opacity: 0.6, size: 2 } );
+    same( style.getStyle(), { c: '#FF0000', o: 0.6, d: 2 } );
   });
   
     </script>
