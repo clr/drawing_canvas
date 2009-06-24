@@ -15,7 +15,7 @@
     
   test( "Check to see that the canvas exists and has the right dimensions.", function(){
     canvas = new Canvas();
-    canvas.initialize();
+    canvas.cleanSlate();
     equals( canvas.width, canvas.canvas.getAttribute( 'width' ) );
     equals( canvas.height, canvas.canvas.getAttribute( 'height' ) );
   });

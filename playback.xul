@@ -24,7 +24,7 @@
   </box>
   <toolbar>
     <menubar flex="1">
-      <button id="replay_button" label="Replay" onclick="canvas.initialize();window.getPlayer().play();" />
+      <button id="replay_button" label="Replay" onclick="canvas.cleanSlate();window.getPlayer().play();" />
       <button id="stop_button" label="Stop" onclick="window.getPlayer().stop();" />
       <menu label="Speed">
         <menupopup>

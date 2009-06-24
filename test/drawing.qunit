@@ -13,7 +13,7 @@
 
   beforeEach = function(){
     canvas = new Canvas();
-    canvas.initialize();
+    canvas.cleanSlate();
 
     drawing = new Drawing( canvas.canvas );
   }
