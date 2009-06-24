@@ -5,7 +5,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Date: 2009-06-24 Wed Jun 24 13:28:06 -0400 2009 $
+ * $Date: 2009-06-24 Wed Jun 24 16:25:26 -0400 2009 $
  * $Rev: 1 more than last time $
  */
  
@@ -176,9 +176,9 @@ Drawing = function( canvas ){
     // Put the pencil on the canvas.
     that.pencilDown();
     // Create a line.
-    that.currentLine = that.createLine();
+    that.createLine();
     // Append the line to this object.
-    that.data.l.push( that.currentLine );
+    that.data.l.push( that.getCurrentLine() );
     // Append the origin point to the current line.
     that.currentLine.p.push( [ coordinates.x, coordinates.y ] );
     // Begin drawing the line into the canvas.
@@ -186,9 +186,10 @@ Drawing = function( canvas ){
     var context = that.getContext();
     context.lineCap = 'round';
     context.lineJoin = 'round';
-    context.lineWidth = that.currentLine.s.d;
-    context.strokeStyle = that.currentLine.s.c;
-    context.globalAlpha = that.currentLine.s.o;
+console.log( that.getCurrentLine().s );
+    context.lineWidth = that.getCurrentLine().s.d;
+    context.strokeStyle = that.getCurrentLine().s.c;
+    context.globalAlpha = that.getCurrentLine().s.o;
     context.beginPath();
     // Draw the first brush stroke.
     context.lineTo( coordinates.x, coordinates.y );
@@ -199,10 +200,10 @@ Drawing = function( canvas ){
     var that = window.getDrawingCanvas();
     var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
-    if( that.pencilOnCanvas ) {
+    if( that.isPencilOnCanvas() ) {
       context.lineTo( coordinates.x, coordinates.y );
       context.stroke();
-      that.currentLine.points.push( [ coordinates.x, coordinates.y ] );
+      that.getCurrentLine().p.push( [ coordinates.x, coordinates.y ] );
     }
   }, false );
    
@@ -250,11 +251,11 @@ Drawing.method( 'isPencilOnCanvas', function(){
 
 Drawing.method( 'createLine', function(){
   style = new Style();
-  var newLine = { 
+  this.currentLine = { 
     s: style.getStyle(),
     p: []
   };
-  return newLine;
+  return this;
 });
 
 Drawing.method( 'normalizeCoordinates', function( xValue, yValue ){
@@ -282,7 +283,7 @@ Style.method( 'getSize', function(){
 });
 
 Style.method( 'getStyle', function(){
-  return { color: this.getColor(), opacity: this.getOpacity(), size: this.getSize() };
+  return { c: this.getColor(), o: this.getOpacity(), d: this.getSize() };
 });
 
 
