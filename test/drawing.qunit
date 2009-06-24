@@ -58,7 +58,7 @@
     beforeEach();
     mouseDown();
     // We start at 0, 0 in fake event trigger.
-    same( drawing.data.lines[0].points[0], [ 0, 0 ] );
+    same( drawing.data.lines[0].points[0], [ 0, -166 ] );
   });
   
   test( "On mousedown, Draw's 'currentLine' should have it's style set.", function(){

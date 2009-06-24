@@ -5,6 +5,7 @@ def all_files
     'event',
     'drawing',
     'style',
+    'player',
     'canvas'
   ].collect{ |f| f + '.js' }
 end
@@ -49,51 +50,28 @@ namespace :sketchfu do
   task :xml_to_json do
     gem 'libxml-ruby', '>= 0.8.3'
     require 'xml'
-    all_scripts = license
     Dir.glob( File.join( 'doc', '*.xml' ) ).each do |file|
-      File.open( File.join( 'doc', File.basename( file, 'xml' ) + '.json' ), 'wb') do |f|
-        f.write( "{ lines: [\n" );
-        parser = XML::Parser.new
-        parser.string = File.read( file )
+      File.open( File.join( 'doc', File.basename( file, '.xml' ) + '.json' ), 'wb') do |f|
+        f.write( "{ l: [\n" );
+        parser = XML::Parser.file( file )
         doc = parser.parse
-        doc.find( '/line' ).each do |line|
-          f.write( "  {\n" );
-          f.write( "    style: {\n" );
-          f.write( "      color: #{ line[:c].to_f / 100 }\n" );
-          f.write( "      opacity: #{ line[:o].to_f / 100 }\n" );
-          f.write( "      size: #{ line[:t].to_i }\n" );
-          f.write( "    }\n" );
-          f.write( posts << p.attributes.inject({}) { |h, a| h[a.name] = a.value; h }
+        doc.find( '//line' ).each do |line|
+          f.write( "{ " );
+          f.write( "s: {" );
+          f.write( " c: '##{ line.attributes['c'].to_i.to_s( 16 ) }'," );
+          f.write( " o: #{ line.attributes['o'].to_f / 100 }," );
+          f.write( " d: #{ line.attributes['t'].to_i } " );
+          f.write( "}, " );
+          f.write( "p: [" );
+          line.find( 'p' ).each do |point|
+            f.write( " [ #{ point.attributes['x'].to_i }, #{ point.attributes['y'].to_i } ]," );
           end
-          # pp posts
-        }
-        f.write( all_scripts )
+          f.write( " ] " );
+          f.write( "},\n" );
+        end
+        f.write( "] }" );
       end
     end
-  end
-  //          style: {
-  //            color: "#000000",
-  //            opacity: 1.0,
-  //            size: 2
-  //     
-  //        { 
-  //          style: {}
-  //          points: [
-  //            [ x0, y0 ],
-  //            [ x1, y1 ],
-  //            ...
-  //            [ xN, yN ]
-  //          ]
-  //        },
-  //        {
-  //          ...
-  //        }
-  //      ]
-  //    } 
-
-  desc "Minify the concatenated files."
-  task :compress => :join do
-    `./jsmin.rb <./drawing_canvas.js >./drawing_canvas.min.js`
   end
 
 end

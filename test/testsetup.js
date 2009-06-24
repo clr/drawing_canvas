@@ -4,6 +4,7 @@ libraries = function(){
     'event',
     'drawing',
     'style',
+    'player',
     'canvas'
   ];
 };
