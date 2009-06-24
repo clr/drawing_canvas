@@ -51,20 +51,20 @@
   test( "On mousedown, Draw should create a line 'currentLine' and append it to data.", function(){
     beforeEach();
     mouseDown();
-    same( drawing.data.lines[0], drawing.getCurrentLine() );
+    same( drawing.data.l[0], drawing.getCurrentLine() );
   });
   
   test( "On mousedown, Draw's 'currentLine' should start with a point.", function(){
     beforeEach();
     mouseDown();
     // We start at 0, 0 in fake event trigger.
-    same( drawing.data.lines[0].points[0], [ 0, -166 ] );
+    same( drawing.data.l[0].p[0], [ 0, -166 ] );
   });
   
   test( "On mousedown, Draw's 'currentLine' should have it's style set.", function(){
     beforeEach();
     mouseDown();
-    same( drawing.data.lines[0].style, { color: '#FF0000', opacity: 0.6, size: 2 } );
+    same( drawing.data.l[0].s, { color: '#FF0000', opacity: 0.6, size: 2 } );
   });
   
   test( "On mouseup, Draw should pull up on the pencil.", function(){
