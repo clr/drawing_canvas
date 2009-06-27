@@ -5,7 +5,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Date: 2009-06-24 Wed Jun 24 16:25:26 -0400 2009 $
+ * $Date: 2009-06-27 Sat Jun 27 17:23:28 -0400 2009 $
  * $Rev: 1 more than last time $
  */
  
@@ -103,6 +103,17 @@ Array.method( 'hasElement', function ( element ){
   }
   return false;
 });
+
+// Return the firts value that isn't null.
+notNull = function(){
+  for( var i = 0; i < arguments.length; i++ ){
+    var value = arguments[i];
+    if( value != null ){
+      return value;
+    }
+  }
+};
+
 // We need to trigger events for testing purposes.  This library is 
 // inspired by, and borrows some code from:
 // http://groups.google.com/group/comp.lang.javascript/browse_thread/thread/27e7c70e51ff8a99/98cea9cdf065a524%2398cea9cdf065a524
@@ -170,45 +181,42 @@ Drawing = function( canvas ){
   this.currentLine = null;
   
   this.canvas.addEventListener( 'mousedown', function( mouseEvent ) {
-    var that = window.getDrawingCanvas();
+    var that = window.getDrawing();
     var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
     // Put the pencil on the canvas.
     that.pencilDown();
-    // Create a line.
+    // Create a line in the JSON data structure.
     that.createLine();
     // Append the line to this object.
     that.data.l.push( that.getCurrentLine() );
     // Append the origin point to the current line.
     that.currentLine.p.push( [ coordinates.x, coordinates.y ] );
-    // Begin drawing the line into the canvas.
 
-    var context = that.getContext();
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-console.log( that.getCurrentLine().s );
-    context.lineWidth = that.getCurrentLine().s.d;
-    context.strokeStyle = that.getCurrentLine().s.c;
-    context.globalAlpha = that.getCurrentLine().s.o;
-    context.beginPath();
-    // Draw the first brush stroke.
-    context.lineTo( coordinates.x, coordinates.y );
-    context.stroke();
+    // Draw the line into <canvas> context.
+    window.getCanvas().createLine( [ coordinates.x, coordinates.y ], {
+      diameter: that.getCurrentLine().s.d,
+      color: that.getCurrentLine().s.c,
+      opacity: that.getCurrentLine().s.o
+    } );
   }, false );
   
   this.canvas.addEventListener( 'mousemove', function( mouseEvent ) {
-    var that = window.getDrawingCanvas();
-    var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
-
+    var that = window.getDrawing();
+    
     if( that.isPencilOnCanvas() ) {
-      context.lineTo( coordinates.x, coordinates.y );
-      context.stroke();
+      var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
+
+      // Append the point data to the current line.
       that.getCurrentLine().p.push( [ coordinates.x, coordinates.y ] );
+
+      // Draw the segment into <canvas> context.
+      window.getCanvas().createSegment( [ coordinates.x, coordinates.y ] );
     }
   }, false );
    
   this.canvas.addEventListener( 'mouseup', function( mouseEvent ) {
-    var that = window.getDrawingCanvas();
+    var that = window.getDrawing();
     // Pull the pencil off the canvas.
     that.pencilUp();
   }, false );
@@ -293,7 +301,7 @@ Player = function( url, async ){
   this.loaded = false;
   this.data = null;
   this.fetch( url, async );
-  this.context = window.getDrawingCanvas().getContext();
+  this.context = window.getDrawing().getContext();
   this.i = 0; // Line counter.
   this.j = 0; // Point counter.
   this.timeout = null; // Timer firing the draw events.
@@ -334,15 +342,22 @@ Player.method( 'frameForward', function(){
     // We are at the beginning of a line, so set the style and 
     // start a new line, drawing the first point.
     var line = this.data[ this.i ];
-    this.context.lineWidth = line.s.d;
-    this.context.strokeStyle = line.s.c;
-    this.context.globalAlpha = line.s.o;
-    this.context.beginPath();
+    var point = this.data[ this.i ].p[ this.j ];
+
+    // Draw the line into <canvas> context.
+    window.getCanvas().createLine( point, {
+      diameter: line.s.d,
+      color: line.s.c,
+      opacity: line.s.o
+    } );
+  } else {
+    // We are in the middle of a line, so just draw this segment.
+    var point = this.data[ this.i ].p[ this.j ];
+
+    // Draw the segment into <canvas> context.
+    window.getCanvas().createSegment( point );
   }
-  // Draw this segment.
-  var point = this.data[ this.i ].p[ this.j ];
-  this.context.lineTo( point[0], point[1] );
-  this.context.stroke();
+  // Continue.
   this.j++;
   this.play();
 });
@@ -404,10 +419,68 @@ Player.method( 'fetch', function( url, async ){
 // We set our canvas configuration here.
 Canvas = function(){
   this.canvas = document.getElementById( 'drawing_canvas' );
+  this.scratchCanvas = null;
   this.colorPicker = document.getElementById( 'color_picker' );
   this.width = 600;
   this.height = 360;
 }
+
+// Create a new line in the <canvas> context.
+Canvas.method( 'createLine', function( coordinates, options ){
+
+
+  // Set some default values.
+  options.diameter = notNull( options.diameter, 2 );
+  options.color    = notNull( options.color,    '#000000' );
+  options.opacity  = notNull( options.opacity,  1.0 );
+
+  // Get the context object and start drawing.
+  this.clearScratchCanvas();
+  this.createScratchCanvas( options.opacity );
+  var context = this.getScratchCanvas().getContext( '2d' );
+  context.lineCap     = 'round';
+  context.lineJoin    = 'round';
+  context.lineWidth   = options.diameter;
+  context.strokeStyle = options.color;
+  context.globalAlpha = 1.0;
+  context.stroke();
+  context.beginPath();
+
+  // Draw the first brush stroke.
+  context.lineTo( coordinates[0], coordinates[1] );
+  context.stroke();
+});
+
+// Create a new segment in the <canvas> context.
+Canvas.method( 'createSegment', function( coordinates ){
+  // Get the context object and continue drawing.
+  var context = this.getScratchCanvas().getContext( '2d' );
+  context.lineTo( coordinates[0], coordinates[1] );
+  context.stroke();
+});
+
+// Create a new segment in the <canvas> context.
+Canvas.method( 'clearScratchCanvas', function( opacity ){
+  if( this.scratchCanvas != null ){
+    this.canvas.removeChild( this.scratchCanvas );
+  }
+});
+
+// Create a new segment in the <canvas> context.
+Canvas.method( 'createScratchCanvas', function( opacity ){
+  var newCanvasElement = document.createElementNS( 'http://www.w3.org/1999/xhtml', 'html:canvas' );
+  this.canvas.appendChild( newCanvasElement );
+
+  newCanvasElement.setAttribute( 'width', this.width );
+  newCanvasElement.setAttribute( 'height', this.height );
+  newCanvasElement.setAttribute( 'style', 'position:absolute;z-index:10;top:0px;left:0px;width:'+this.width+'px;height:'+this.height+'px;opacity:'+opacity );
+console.log( newCanvasElement );
+  this.scratchCanvas = newCanvasElement;
+});
+
+Canvas.method( 'getScratchCanvas', function(){
+  return this.scratchCanvas;
+});
 
 // We initialize the canvas with this command.
 Canvas.method( 'cleanSlate', function(){
@@ -419,6 +492,7 @@ Canvas.method( 'cleanSlate', function(){
   context = this.canvas.getContext( '2d' );
 
   // Create the frame
+  context.clearRect( 0, 0, this.width, this.height );
   context.fillStyle = "white";
   context.fillRect( 0, 0, this.width, this.height );
   context.strokeStyle = "2px";
@@ -426,10 +500,14 @@ Canvas.method( 'cleanSlate', function(){
 
   // Extend the Window object, which is a Singleton, so we can always get the
   // drawing object, and the style object.
-  Window.prototype.setDrawingCanvas = function( drawing ){
+  Window.prototype.canvas = this;
+  Window.prototype.getCanvas = function(){
+    return this.canvas;
+  };
+  Window.prototype.setDrawing = function( drawing ){
     this.drawing = drawing;
   };
-  Window.prototype.getDrawingCanvas = function(){
+  Window.prototype.getDrawing = function(){
     return this.drawing;
   };
   Window.prototype.setStyle = function( style ){
@@ -445,7 +523,7 @@ Canvas.method( 'cleanSlate', function(){
     return this.player;
   };
 
-  window.setDrawingCanvas( new Drawing( this.canvas ) );
+  window.setDrawing( new Drawing( this.canvas ) );
   window.setStyle( new Style() );
 });
 

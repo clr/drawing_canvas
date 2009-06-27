@@ -34,6 +34,14 @@
     equals( array.hasElement( 'F' ), false );
   });
   
+  test( "Function setIfNull() should set the variable to the value if it currently is null", function(){
+    var color = null;
+    color = notNull( color, 'blue' );
+    equals( color, 'blue' );
+    color = notNull( color, 'red' );
+    equals( color, 'blue' );
+  });
+  
     </script>
 
     <h1></h1>

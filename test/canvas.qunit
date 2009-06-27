@@ -14,10 +14,19 @@
   module( "Canvas Tests");
     
   test( "Check to see that the canvas exists and has the right dimensions.", function(){
-    canvas = new Canvas();
+    var canvas = new Canvas();
     canvas.cleanSlate();
     equals( canvas.width, canvas.canvas.getAttribute( 'width' ) );
     equals( canvas.height, canvas.canvas.getAttribute( 'height' ) );
+  });
+    
+  test( "Create a scratch canvas of the same size to handle opacity for the current 'layer.'", function(){
+    var canvas = new Canvas();
+    canvas.cleanSlate();
+    canvas.createScratchCanvas( 1.0 );
+    var scratch = canvas.getScratchCanvas();
+    equals( scratch.width, canvas.canvas.getAttribute( 'width' ) );
+    equals( scratch.height, canvas.canvas.getAttribute( 'height' ) );
   });
     
     </script>

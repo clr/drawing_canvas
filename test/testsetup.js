@@ -28,7 +28,7 @@ $( function(){
   $( [ '' ].concat( libraries() ) ).each( function( i, test ){ 
     var option = $( '<option>'+test+'</option>' );
     $( '#unit_test_select' ).append( option );
-    $( option ).data( 'url', document.location.toString().split( "drawing_canvas\/test", 1 )[0] + 'drawing_canvas/test/' + test + '.qunit' );
+    $( option ).data( 'url', document.location.toString().split( "\/test\/", 1 )[0] + '/test/' + test + '.qunit' );
   });
   $( '#unit_test_select' ).change( function(){
     var url = $( $( '#unit_test_select option:selected' )[0] ).data( 'url' );
