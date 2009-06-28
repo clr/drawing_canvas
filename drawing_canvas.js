@@ -5,7 +5,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Date: 2009-06-27 Sat Jun 27 17:23:28 -0400 2009 $
+ * $Date: 2009-06-27 Sat Jun 27 22:21:49 -0400 2009 $
  * $Rev: 1 more than last time $
  */
  
@@ -103,6 +103,15 @@ Array.method( 'hasElement', function ( element ){
   }
   return false;
 });
+// Same thing for a NodeList.
+NodeList.prototype.hasElement = function ( element ){
+  for( var i = 0; i < this.length; i++ ){
+    if( element == this.item( i ) ){
+      return true;
+    }
+  }
+  return false;
+};
 
 // Return the firts value that isn't null.
 notNull = function(){
@@ -180,7 +189,7 @@ Drawing = function( canvas ){
   this.pencilOnCanvas = false;
   this.currentLine = null;
   
-  this.canvas.addEventListener( 'mousedown', function( mouseEvent ) {
+  this.canvas.parentNode.addEventListener( 'mousedown', function( mouseEvent ) {
     var that = window.getDrawing();
     var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
@@ -191,31 +200,31 @@ Drawing = function( canvas ){
     // Append the line to this object.
     that.data.l.push( that.getCurrentLine() );
     // Append the origin point to the current line.
-    that.currentLine.p.push( [ coordinates.x, coordinates.y ] );
+    that.currentLine.p.push( [ coordinates[0], coordinates[1] ] );
 
     // Draw the line into <canvas> context.
-    window.getCanvas().createLine( [ coordinates.x, coordinates.y ], {
+    window.getCanvas().createLine( [ coordinates[0], coordinates[1] ], {
       diameter: that.getCurrentLine().s.d,
       color: that.getCurrentLine().s.c,
       opacity: that.getCurrentLine().s.o
     } );
   }, false );
   
-  this.canvas.addEventListener( 'mousemove', function( mouseEvent ) {
+  this.canvas.parentNode.addEventListener( 'mousemove', function( mouseEvent ) {
     var that = window.getDrawing();
     
     if( that.isPencilOnCanvas() ) {
       var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
       // Append the point data to the current line.
-      that.getCurrentLine().p.push( [ coordinates.x, coordinates.y ] );
+      that.getCurrentLine().p.push( [ coordinates[0], coordinates[1] ] );
 
       // Draw the segment into <canvas> context.
-      window.getCanvas().createSegment( [ coordinates.x, coordinates.y ] );
+      window.getCanvas().createSegment( [ coordinates[0], coordinates[1] ] );
     }
   }, false );
    
-  this.canvas.addEventListener( 'mouseup', function( mouseEvent ) {
+  this.canvas.parentNode.addEventListener( 'mouseup', function( mouseEvent ) {
     var that = window.getDrawing();
     // Pull the pencil off the canvas.
     that.pencilUp();
@@ -237,7 +246,7 @@ Drawing.method( 'getCurrentLine', function(){
 });
 
 Drawing.method( 'getOffset', function(){
-  return { x: this.canvas.offsetLeft, y: this.canvas.offsetTop };
+  return [ this.canvas.parentNode.boxObject.x, this.canvas.parentNode.boxObject.y ];
 });
 
 Drawing.method( 'setStyle', function(){
@@ -267,7 +276,8 @@ Drawing.method( 'createLine', function(){
 });
 
 Drawing.method( 'normalizeCoordinates', function( xValue, yValue ){
-  return { x: ( xValue - this.getOffset().x ), y: ( yValue - this.getOffset().y ) }
+  var offset = this.getOffset();
+  return [ ( xValue - offset[0] ), ( yValue - offset[1] ) ];
 });
 // This class inspects the styleControls DOM element and reports
 // the settings back as a JSON object.
@@ -428,14 +438,13 @@ Canvas = function(){
 // Create a new line in the <canvas> context.
 Canvas.method( 'createLine', function( coordinates, options ){
 
-
   // Set some default values.
   options.diameter = notNull( options.diameter, 2 );
   options.color    = notNull( options.color,    '#000000' );
   options.opacity  = notNull( options.opacity,  1.0 );
 
   // Get the context object and start drawing.
-  this.clearScratchCanvas();
+  this.collapseScratchCanvas();
   this.createScratchCanvas( options.opacity );
   var context = this.getScratchCanvas().getContext( '2d' );
   context.lineCap     = 'round';
@@ -460,22 +469,46 @@ Canvas.method( 'createSegment', function( coordinates ){
 });
 
 // Create a new segment in the <canvas> context.
-Canvas.method( 'clearScratchCanvas', function( opacity ){
-  if( this.scratchCanvas != null ){
-    this.canvas.removeChild( this.scratchCanvas );
+Canvas.method( 'collapseScratchCanvas', function(){
+  if( this.getScratchCanvas() != null ){
+    var scratchContext = this.getScratchCanvas().getContext( '2d' );
+    var imageData = scratchContext.getImageData( 0, 0, this.width, this.height );
+    var pixels    = imageData.data;
+    var opacity   = this.getScratchCanvas().style.opacity;
+    
+    // Loop through all the pixels and apply the opacity.
+    for( var i = 0, n = pixels.length; i < n; i += 4 ) {
+      pixels[ i + 3 ] = parseInt( opacity * pixels[ i + 3 ] );
+    }
+    scratchContext.putImageData( imageData, 0, 0 );
+    
+    this.canvas.getContext( '2d' ).drawImage( this.getScratchCanvas(), 0, 0 );
+    this.clearScratchCanvas();
   }
+});
+
+// Create a new segment in the <canvas> context.
+Canvas.method( 'clearScratchCanvas', function(){
+  if( this.canvas.parentNode.childNodes.hasElement( this.getScratchCanvas() ) ){
+    this.canvas.parentNode.removeChild( this.scratchCanvas );
+  }
+  this.setScratchCanvas( null );
 });
 
 // Create a new segment in the <canvas> context.
 Canvas.method( 'createScratchCanvas', function( opacity ){
   var newCanvasElement = document.createElementNS( 'http://www.w3.org/1999/xhtml', 'html:canvas' );
-  this.canvas.appendChild( newCanvasElement );
+  this.canvas.parentNode.appendChild( newCanvasElement );
 
   newCanvasElement.setAttribute( 'width', this.width );
   newCanvasElement.setAttribute( 'height', this.height );
-  newCanvasElement.setAttribute( 'style', 'position:absolute;z-index:10;top:0px;left:0px;width:'+this.width+'px;height:'+this.height+'px;opacity:'+opacity );
-console.log( newCanvasElement );
+  newCanvasElement.setAttribute( 'style', 'position:absolute;z-index:2;top:0px;left:0px;width:'+this.width+'px;height:'+this.height+'px;opacity:'+opacity );
   this.scratchCanvas = newCanvasElement;
+});
+
+Canvas.method( 'setScratchCanvas', function( scratchCanvas ){
+  this.scratchCanvas = scratchCanvas;
+  return this;
 });
 
 Canvas.method( 'getScratchCanvas', function(){
@@ -486,7 +519,7 @@ Canvas.method( 'getScratchCanvas', function(){
 Canvas.method( 'cleanSlate', function(){
   this.canvas.setAttribute( 'width', this.width );
   this.canvas.setAttribute( 'height', this.height );
-  this.canvas.setAttribute( 'style', 'width:'+this.width+'px;height:'+this.height+'px' );
+  this.canvas.setAttribute( 'style', 'position:absolute;z-index:1;top:0px;left:0px;width:'+this.width+'px;height:'+this.height+'px' );
 
   // Get context
   context = this.canvas.getContext( '2d' );

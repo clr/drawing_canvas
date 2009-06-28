@@ -29,6 +29,14 @@
     equals( scratch.height, canvas.canvas.getAttribute( 'height' ) );
   });
     
+  test( "Collapse a scratch canvas and scratch canvas is returned to null.", function(){
+    var canvas = new Canvas();
+    canvas.cleanSlate();
+    canvas.createScratchCanvas( 1.0 );
+    canvas.collapseScratchCanvas();
+    equals( null, canvas.getScratchCanvas() );
+  });
+    
     </script>
 
     <h1></h1>

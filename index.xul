@@ -19,7 +19,7 @@
     </menubar>
   </toolbar>
 
-  <box orient="horizontal">
+  <box style="position:absolute">
     <html:canvas id="drawing_canvas"></html:canvas>
   </box>
   <spacer flex="1" />
