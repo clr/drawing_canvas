@@ -34,6 +34,12 @@
     equals( array.hasElement( 'F' ), false );
   });
   
+  test( "Array should have the first() and last() function", function(){
+    array = [ 'A', 'B', 'C', 'D', 'E' ];
+    equals( array.first(), 'A' );
+    equals( array.last(),  'E' );
+  });
+    
   test( "Function setIfNull() should set the variable to the value if it currently is null", function(){
     var color = null;
     color = notNull( color, 'blue' );

@@ -19,12 +19,12 @@
     </menubar>
   </toolbar>
 
-  <box orient="horizontal" flex="1">
+  <box style="position:absolute" orient="horizontal" flex="1">
     <html:canvas id="drawing_canvas"></html:canvas>
   </box>
   <toolbar>
     <menubar flex="1">
-      <button id="replay_button" label="Replay" onclick="canvas.cleanSlate();window.getPlayer().play();" />
+      <button id="replay_button" label="Replay" onclick="canvas.cleanSlate();window.getPlayer().replay();" />
       <button id="stop_button" label="Stop" onclick="window.getPlayer().stop();" />
       <menu label="Speed">
         <menupopup>

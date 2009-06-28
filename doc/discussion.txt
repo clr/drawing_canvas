@@ -28,10 +28,11 @@ will be to always draw the current line into another 'layer', and then
 compress that layer on mouseup.  Then, the line can draw as opaque, and we
 can control the opacity of the entire layer.  This algorithm will take some extra 
 doing, but the new line creation is pretty easy to identify in Drawing and Player.
+UPDATE: I implemented a solution along those lines, using a 'scratch' canvas.
 
 * Need to watch for 'mouseout' events which should probably terminate the line,
 but leave the pencil down so we can restart a new line at 'mouseenter'.  Maybe 
 also bind 'mouseup' to the entire window, so we can simulate drawing outside of
-the canvas, for usability purposes.
+the canvas, for a better experience.
 
 

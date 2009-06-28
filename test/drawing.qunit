@@ -15,12 +15,13 @@
     canvas = new Canvas();
     canvas.cleanSlate();
 
-    drawing = new Drawing( canvas.canvas );
+    drawing = window.getDrawing();
   }
 
   mouseDown = function(){
     commander = new Event( 'mousedown' );
     commander.trigger( drawing.getCanvas() );
+//console.log( drawing );
   }
   
   mouseUp = function(){
@@ -43,9 +44,9 @@
   
   test( "On mousedown, Draw should put the pencil to the canvas.", function(){
     beforeEach();
-    equals( false, drawing.isPencilOnCanvas() );
+    equals( drawing.isPencilOnCanvas(), false );
     mouseDown();
-    equals( true, drawing.isPencilOnCanvas() );
+    equals( drawing.isPencilOnCanvas(), true );
   });
   
   test( "On mousedown, Draw should create a line 'currentLine' and append it to data.", function(){

@@ -5,7 +5,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Date: 2009-06-27 Sat Jun 27 22:21:49 -0400 2009 $
+ * $Date: 2009-06-28 Sun Jun 28 16:44:18 -0400 2009 $
  * $Rev: 1 more than last time $
  */
  
@@ -113,6 +113,16 @@ NodeList.prototype.hasElement = function ( element ){
   return false;
 };
 
+// First element.
+Array.method( 'first', function (){
+  return this[0];
+});
+
+// Last element.
+Array.method( 'last', function (){
+  return this[ this.length - 1 ];
+});
+
 // Return the firts value that isn't null.
 notNull = function(){
   for( var i = 0; i < arguments.length; i++ ){
@@ -189,8 +199,8 @@ Drawing = function( canvas ){
   this.pencilOnCanvas = false;
   this.currentLine = null;
   
-  this.canvas.parentNode.addEventListener( 'mousedown', function( mouseEvent ) {
-    var that = window.getDrawing();
+  var that = this;
+  this.getCanvas().parentNode.addEventListener( 'mousedown', function( mouseEvent ) {
     var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
     // Put the pencil on the canvas.
@@ -210,9 +220,7 @@ Drawing = function( canvas ){
     } );
   }, false );
   
-  this.canvas.parentNode.addEventListener( 'mousemove', function( mouseEvent ) {
-    var that = window.getDrawing();
-    
+  this.getCanvas().parentNode.addEventListener( 'mousemove', function( mouseEvent ) {
     if( that.isPencilOnCanvas() ) {
       var coordinates = that.normalizeCoordinates( mouseEvent.clientX, mouseEvent.clientY );
 
@@ -224,8 +232,7 @@ Drawing = function( canvas ){
     }
   }, false );
    
-  this.canvas.parentNode.addEventListener( 'mouseup', function( mouseEvent ) {
-    var that = window.getDrawing();
+  this.getCanvas().parentNode.addEventListener( 'mouseup', function( mouseEvent ) {
     // Pull the pencil off the canvas.
     that.pencilUp();
   }, false );
@@ -238,7 +245,7 @@ Drawing.method( 'getCanvas', function(){
 });
 
 Drawing.method( 'getContext', function(){
-  return this.canvas.getContext( '2d' );
+  return this.getCanvas().getContext( '2d' );
 });
 
 Drawing.method( 'getCurrentLine', function(){
@@ -246,12 +253,18 @@ Drawing.method( 'getCurrentLine', function(){
 });
 
 Drawing.method( 'getOffset', function(){
-  return [ this.canvas.parentNode.boxObject.x, this.canvas.parentNode.boxObject.y ];
+  if( this.getCanvas().parentNode.boxObject ){
+    // XUL
+    return [ this.getCanvas().parentNode.boxObject.x, this.getCanvas().parentNode.boxObject.y ];
+  } else {
+    // HTML
+    return [ this.getCanvas().parentNode.offsetLeft, this.getCanvas().parentNode.offsetTop ];
+  }
 });
 
 Drawing.method( 'setStyle', function(){
   color = window.getColorPicker().value;
-  return this.canvas.getContext( '2d' );
+  return this.getCanvas().getContext( '2d' );
 });
 
 Drawing.method( 'pencilDown', function(){
@@ -273,6 +286,15 @@ Drawing.method( 'createLine', function(){
     p: []
   };
   return this;
+});
+
+// Get rid of the current line from the data and from the canvas
+// scratch layer.
+Drawing.method( 'undoLine', function(){
+  if( this.getCurrentLine() == this.data.l.last() ){
+    this.data.l.pop();
+    window.getCanvas().clearScratchCanvas();
+  }
 });
 
 Drawing.method( 'normalizeCoordinates', function( xValue, yValue ){
@@ -372,6 +394,12 @@ Player.method( 'frameForward', function(){
   this.play();
 });
 
+// Start the iterators over again.
+Player.method( 'replay', function(){
+  this.i = 0;
+  this.j = 0;
+  this.play();
+});
 
 // Clear the timeout to stop the playback effect.
 Player.method( 'stop', function(){

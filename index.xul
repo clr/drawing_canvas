@@ -16,6 +16,7 @@
           <scale id="opacity_picker" min="0" max="100" orient="vertical" dir="reverse" value="100" />
         </menupopup>
       </menu>
+      <button id="undo_button" label="Undo" onclick="window.getDrawing().undoLine();" />
     </menubar>
   </toolbar>
 
