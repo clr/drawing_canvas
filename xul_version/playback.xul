@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="chrome://global/skin/"?>
+<window orient="vertical" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  xmlns:html="http://www.w3.org/1999/xhtml">
+  <script language="javascript" src="./drawing_canvas.js"/>
+
+  <toolbar>
+    <menubar flex="1">
+      <colorpicker id="color_picker" type="button" color="#000000"/>
+      <menu label="Size">
+        <menupopup>
+          <scale id="size_picker" min="1" max="100" orient="vertical" dir="reverse" value="8" />
+        </menupopup>
+      </menu>
+      <menu label="Opacity">
+        <menupopup>
+          <scale id="opacity_picker" min="0" max="100" orient="vertical" dir="reverse" value="100" />
+        </menupopup>
+      </menu>
+    </menubar>
+  </toolbar>
+
+  <box style="position:absolute" orient="horizontal" flex="1">
+    <html:canvas id="drawing_canvas"></html:canvas>
+  </box>
+  <toolbar>
+    <menubar flex="1">
+      <button id="replay_button" label="Replay" onclick="canvas.cleanSlate();window.getPlayer().replay();" />
+      <button id="stop_button" label="Stop" onclick="window.getPlayer().stop();" />
+      <menu label="Speed">
+        <menupopup>
+          <scale id="speed_picker" min="0" max="500" orient="vertical" value="3" />
+        </menupopup>
+      </menu>
+    </menubar>
+  </toolbar>
+  <spacer flex="1" />
+
+<script id="source" language="javascript" type="text/javascript">
+<![CDATA[
+
+window.onload = function(){ 
+  canvas = new Canvas();
+  canvas.cleanSlate();
+  window.setPlayer( new Player( './doc/foggy_winter_day.json', false ) );
+  window.getPlayer().play();
+};
+
+]]>
+
+</script>
+</window>
+

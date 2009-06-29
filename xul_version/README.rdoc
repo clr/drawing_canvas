@@ -1,0 +1,5 @@
+Drawing Canvas
+
+This is a prototype exercise to mimic the Flash interface used by SketchFu.
+
+Putting this together in a XUL document for now, so we get things like the colorpicker for free.
