@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>SketchFaux</title>
+  	<link rel="stylesheet" href="lib/vendor/colorpicker/css/colorpicker.css" type="text/css" />
+  	<link rel="stylesheet" href="css/ui.all.css" type="text/css" />
+  	<link rel="stylesheet" href="css/sketchfaux.css" type="text/css" />
+  	<script type="text/javascript" src="./jquery-1.3.2.js"></script>
+  	<script type="text/javascript" src="./ui.core.js"></script>
+  	<script type="text/javascript" src="./ui.slider.js"></script>
+  	<script type="text/javascript" src="./lib/vendor/colorpicker/js/colorpicker.js"></script>
+    <script type="text/javascript" src="./lib/vendor/colorpicker/js/eye.js"></script>
+    <script type="text/javascript" src="./lib/vendor/colorpicker/js/utils.js"></script>
+    <script type="text/javascript" src="./drawing_canvas.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sketchfaux">
+      </div>
+
+
+
+<!--
+          <button onclick="canvas.cleanSlate();window.getPlayer().replay();" class="generic_button">Replay</button>
+          <button onclick="window.getPlayer().stop();" style="left:60px;">Stop</button>
+          <scale id="speed_picker" min="0" max="500" orient="vertical" value="3"></scale>
+          <button onclick="window.getDrawing().undoLine();" style="right:0px;">Undo</button>
+
+
+      <div id="opacityPickerHolder" style="float: right;">
+        <div style="display: block; position: relative;" id="collorpicker_315" class="colorpicker">
+          <div style="background-color: rgb(255, 0, 0);" class="colorpicker_color">
+            <div>
+              <div style="left: 150px; top: 0px;"></div>
+            </div>
+          </div>
+          <div class="colorpicker_hue">
+            <div style="top: 150px;"></div>
+          </div>
+          <div style="background-color: rgb(255, 0, 0);" class="colorpicker_new_color"></div>
+          <div style="background-color: rgb(255, 0, 0);" class="colorpicker_current_color"></div>
+          <div class="colorpicker_hex">
+            <input maxlength="6" size="6" type="text">
+          </div>
+          <div class="colorpicker_rgb_r colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_rgb_g colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_rgb_b colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_hsb_h colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_hsb_s colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_hsb_b colorpicker_field">
+            <input maxlength="3" size="3" type="text"><span></span>
+          </div>
+          <div class="colorpicker_submit"></div>
+        </div>
+      </div>
+
+-->
+    </div>
+
+<script id="source" language="javascript" type="text/javascript">
+$( function(){
+
+//$('#colorPickerHolder').ColorPicker({flat: true});
+//$('#colorPickerHolder').ColorPickerGetColor();
+
+//$( '#opacityPicker' ).slider();
+//$( '#sizePicker' ).slider();
+$( 'div.sketchfaux' ).sketchfaux();
+//canvas.cleanSlate();
+} );
+</script>
+  </body>
+</html>

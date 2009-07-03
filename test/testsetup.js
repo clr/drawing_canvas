@@ -2,7 +2,7 @@ libraries = function(){
   return [
     'pepper',
     'event',
-    'drawing',
+    'interface',
     'style',
     'player',
     'canvas'

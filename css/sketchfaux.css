@@ -1,0 +1,106 @@
+body{
+  position: absolute;
+  background-color: #a3a3a3;
+}
+
+.generic_slider {
+  display: block;
+  position: relative;
+	width: 356px;
+	height: 40px;
+	overflow: hidden;
+	background: url(../images/generic_slider_background.png);
+	font-family: Arial, Helvetica, sans-serif;
+}
+.ui-slider-horizontal {
+	position: absolute;
+  top: 15px;
+  left: 87px;
+  width: 251px;
+  height: 8px;
+  border-color: #898989;
+  background-color: #1f1d1d;
+}
+div.ui-slider-horizontal a.ui-slider-handle {
+	position: absolute;
+	display: block;
+	width: 9px;
+	height: 35px;
+	margin-top: -8px;
+	margin-left: -5px;
+	border: none;
+	overflow: hidden;
+	background: url(../images/generic_slider_indicator.gif) left top;
+}
+div.sketchfaux {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 26px;
+}
+.canvas_holder {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 610px;
+  height: 399px;
+	background: url(../images/canvas_background.png) left top;
+}
+.canvas_holder canvas {
+  position:absolute;
+  top: 4px;
+  left: 4px;
+  width: 600px;
+  height: 360px;
+  border: 1px inset black;
+  cursor: crosshair;
+}
+.canvas_holder button {
+  position: absolute;
+  top: 363px;
+}
+.color_picker_holder {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 616px;
+}
+.opacity_picker_holder {
+  display: block;
+  position: absolute;
+  top: 182px;
+  left: 616px;
+}
+.size_picker_holder {
+  display: block;
+  position: absolute;
+  top: 229px;
+  left: 616px;
+}
+
+.opacity_picker_holder span, .size_picker_holder span {
+  position: absolute;
+  top: 14px;
+  left: 11px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #898989;
+}
+
+.generic_button, .generic_button_active {
+  display: block;
+  position: relative;
+	width: 72px;
+	height: 22px;
+	overflow: hidden;
+	background: url(../images/generic_button.png) top;
+  border-color: #898989;
+  background-color: #1f1d1d;
+}
+.generic_button:hover {
+	background-position: center;
+}
+.generic_button_active {
+	background-position: bottom;
+}

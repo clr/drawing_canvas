@@ -1,38 +1,5 @@
-* The choice of JSON: it is lightweight and easy to manipulate.  I almost 
-started encoding the data as objects (Line, Points, Style, etc.), with a 
-plan to descend through an object tree and convert it to JSON or whatever
-on save, but I could just as easily descend through JSON, and I can't 
-forsee getting any advantage from dealing with extendable objects instead 
-of a simple data graph.  So simple JSON it is.
+* I added the latest jQuery, and am converting the prototype from XUL to HTML.
 
-* One problem with this [canvas] approach is that we have an extremely simple algorithm 
-for drawing the lines based on mouse movement.  A more sophisticated approach 
-would replace the simple line draw with one that took mouse velocity 
-(possibly momentum even?) into account and antialias the brush stroke 
-accordingly before rendering it to the canvas.
+* Relying on 3rd-party lib/vendor/colorpickers for the colorpicker [ Stefan Petre, www.eyecon.ro ] and for the overall theme inspiration.
 
-* Where is SketchFu's 'opacity' setting?  Can't find it for the life of me.
-Are they relying entirely on the tablet pressure?  This can be accessed via 
-Flash, but it isn't possible to access that is a pure-JS solution.
-
-* I am using DOM ids as though there will only be one drawing canvas per document
-(or window in the case of XUL).  This is not a  production-ready code practice.  
-In the next version, I will generate the widgets onload and assign them to the 
-window object dynamically, and pass the window object to each widget so that the
-widgets can identify each other through a mutual DOM-anonymous context.
-
-* Implemented 'opacity', and ran into an unexpected issue.  Because a line is
-drawn on each mousemove, the opacities build up, essentially smearing the
-line from opaque to the desired opacity.  I think the best way around this
-will be to always draw the current line into another 'layer', and then 
-compress that layer on mouseup.  Then, the line can draw as opaque, and we
-can control the opacity of the entire layer.  This algorithm will take some extra 
-doing, but the new line creation is pretty easy to identify in Drawing and Player.
-UPDATE: I implemented a solution along those lines, using a 'scratch' canvas.
-
-* Need to watch for 'mouseout' events which should probably terminate the line,
-but leave the pencil down so we can restart a new line at 'mouseenter'.  Maybe 
-also bind 'mouseup' to the entire window, so we can simulate drawing outside of
-the canvas, for a better experience.
-
-
+* JSON is a native object in Firefox3.5!  Yey!!

@@ -3,7 +3,7 @@ def all_files
   [
     'pepper',
     'event',
-    'drawing',
+    'interface',
     'style',
     'player',
     'canvas'
